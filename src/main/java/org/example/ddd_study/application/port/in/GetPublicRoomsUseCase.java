@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface GetPublicRoomsUseCase {
 
-    List<GetPublicRoomResult> getPublicRooms();
+    List<GetPublicRoomResult> getPublicRooms(int page, int size);
 }

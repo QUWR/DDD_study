@@ -41,9 +41,11 @@ public class RoomController {
 
     @GetMapping()
     public ApiResponse<List<RoomSummaryResponse>> getRoomInfo(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "6") int size
             //todo:@Authentication 추가
     ) {
-        List<GetPublicRoomResult> results = getAllRoomsUseCase.getPublicRooms();
+        List<GetPublicRoomResult> results = getAllRoomsUseCase.getPublicRooms(page, size);
         List<RoomSummaryResponse> response = results.stream()
                 .map(result -> RoomSummaryResponse.builder()
                         .roomId(result.roomId())

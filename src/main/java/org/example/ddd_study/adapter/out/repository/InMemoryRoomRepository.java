@@ -5,10 +5,7 @@ import org.example.ddd_study.domain.game.entity.RoomSession;
 import org.example.ddd_study.domain.game.vo.RoomId;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -23,9 +20,12 @@ public class InMemoryRoomRepository implements RoomPort {
     }
 
     @Override
-    public List<RoomSession> loadPublicRooms() {
+    public List<RoomSession> loadPublicRooms(int page, int size) {
         return store.values().stream()
                 .filter(room -> !room.isPrivate())
+                .sorted(Comparator.comparing(RoomSession::getCreatedAt).reversed())
+                .skip((long) page * size)
+                .limit(size)
                 .collect(Collectors.toList());
     }
 }
