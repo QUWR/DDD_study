@@ -7,7 +7,7 @@ import org.example.ddd_study.adapter.in.dto.CreateRoomRequest;
 import org.example.ddd_study.adapter.in.dto.CreateRoomResponse;
 import org.example.ddd_study.adapter.in.dto.RoomSummaryResponse;
 import org.example.ddd_study.application.port.in.CreateRoomUseCase;
-import org.example.ddd_study.application.port.in.GetAllRoomsUseCase;
+import org.example.ddd_study.application.port.in.GetPublicRoomsUseCase;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,7 +18,7 @@ import java.util.List;
 public class RoomController {
 
     private final CreateRoomUseCase createRoomUseCase;
-    private final GetAllRoomsUseCase getAllRoomsUseCase;
+    private final GetPublicRoomsUseCase getAllRoomsUseCase;
 
     @PostMapping
     public ApiResponse<CreateRoomResponse> createRoom(@RequestBody @Valid CreateRoomRequest request
@@ -32,7 +32,7 @@ public class RoomController {
     public ApiResponse<List<RoomSummaryResponse>> getRoomInfo(
             //todo:@Authentication 추가
     ) {
-        List<RoomSummaryResponse> response = getAllRoomsUseCase.getAllRooms();
+        List<RoomSummaryResponse> response = getAllRoomsUseCase.getPublicRooms();
         return ApiResponse.success(response);
     }
 }

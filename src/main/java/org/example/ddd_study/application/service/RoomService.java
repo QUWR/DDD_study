@@ -5,7 +5,7 @@ import org.example.ddd_study.adapter.in.dto.CreateRoomRequest;
 import org.example.ddd_study.adapter.in.dto.CreateRoomResponse;
 import org.example.ddd_study.adapter.in.dto.RoomSummaryResponse;
 import org.example.ddd_study.application.port.in.CreateRoomUseCase;
-import org.example.ddd_study.application.port.in.GetAllRoomsUseCase;
+import org.example.ddd_study.application.port.in.GetPublicRoomsUseCase;
 import org.example.ddd_study.application.port.out.RoomPort;
 import org.example.ddd_study.domain.game.entity.RoomSession;
 import org.example.ddd_study.domain.game.vo.GameUserId;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class RoomService implements CreateRoomUseCase, GetAllRoomsUseCase {
+public class RoomService implements CreateRoomUseCase, GetPublicRoomsUseCase {
 
     private final RoomPort roomPort;
 
@@ -47,7 +47,7 @@ public class RoomService implements CreateRoomUseCase, GetAllRoomsUseCase {
 
     @Override
     @Transactional(readOnly = true)
-    public List<RoomSummaryResponse> getAllRooms() {
+    public List<RoomSummaryResponse> getPublicRooms() {
 
         List<RoomSession> sessions = roomPort.loadPublicRooms();
 

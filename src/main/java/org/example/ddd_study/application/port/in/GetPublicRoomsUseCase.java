@@ -4,7 +4,7 @@ import org.example.ddd_study.adapter.in.dto.RoomSummaryResponse;
 
 import java.util.List;
 
-public interface GetAllRoomsUseCase {
+public interface GetPublicRoomsUseCase {
 
-    List<RoomSummaryResponse> getAllRooms();
+    List<RoomSummaryResponse> getPublicRooms();
 }
