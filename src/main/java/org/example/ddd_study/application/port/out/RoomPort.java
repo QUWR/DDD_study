@@ -8,7 +8,6 @@ import java.util.Optional;
 
 public interface RoomPort {
 
-    Optional<RoomSession> loadRoom(RoomId roomId);
     void saveRoom(RoomSession roomSession);
     List<RoomSession> loadPublicRooms();
 }

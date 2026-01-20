@@ -18,11 +18,6 @@ public class InMemoryRoomRepository implements RoomPort {
     private final Map<RoomId, RoomSession> store = new ConcurrentHashMap<>();
 
     @Override
-    public Optional<RoomSession> loadRoom(RoomId roomId) {
-        return Optional.ofNullable(store.get(roomId));
-    }
-
-    @Override
     public void saveRoom(RoomSession roomSession) {
         store.put(roomSession.getId(), roomSession);
     }

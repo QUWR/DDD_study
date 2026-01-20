@@ -1,11 +1,8 @@
 package org.example.ddd_study.application.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.ddd_study.adapter.in.dto.CreateRoomRequest;
-import org.example.ddd_study.adapter.in.dto.CreateRoomResponse;
 import org.example.ddd_study.adapter.in.dto.RoomSummaryResponse;
-import org.example.ddd_study.application.port.in.CreateRoomUseCase;
-import org.example.ddd_study.application.port.in.GetPublicRoomsUseCase;
+import org.example.ddd_study.application.port.in.*;
 import org.example.ddd_study.application.port.out.RoomPort;
 import org.example.ddd_study.domain.game.entity.RoomSession;
 import org.example.ddd_study.domain.game.vo.GameUserId;
@@ -26,42 +23,39 @@ public class RoomService implements CreateRoomUseCase, GetPublicRoomsUseCase {
 
     @Override
     @Transactional
-    public CreateRoomResponse createRoom(CreateRoomRequest request) {
+    public CreateRoomResult createRoom(CreateRoomCommand command) {
         RoomId roomId = RoomId.of(UUID.randomUUID().toString());//todo: 추후 openvidu 사용시 세션ID로 변경
-        RoomTitle roomTitle = RoomTitle.of(request.getTitle());
-        GameUserId hostUserId = GameUserId.of(request.getHostUserId());
+        RoomTitle roomTitle = RoomTitle.of(command.title());
+        GameUserId hostUserId = GameUserId.of(command.hostUserId());
 
         RoomSession roomSession = RoomSession.create(
                 roomId,
                 roomTitle,
-                request.isPrivate(),
-                request.getCapacity(),
+                command.isPrivate(),
+                command.capacity(),
                 hostUserId,
-                request.getHostDisplayName()
+                command.hostDisplayName()
         );
 
         roomPort.saveRoom(roomSession);
 
-        return new CreateRoomResponse(roomId.value(), roomSession.getInviteCode());
+        return new CreateRoomResult(roomId.value(), roomSession.getInviteCode());
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<RoomSummaryResponse> getPublicRooms() {
+    public List<GetPublicRoomResult> getPublicRooms() {
 
         List<RoomSession> sessions = roomPort.loadPublicRooms();
 
-        List<RoomSummaryResponse> summaries = sessions.stream()
-                .map(room -> RoomSummaryResponse.builder()
-                        .roomId(room.getId().value())
-                        .title(room.getTitle().value())
-                        .currentCount(room.getPlayerCount())
-                        .capacity(room.getCapacity())
-                        .isPrivate(room.isPrivate())
-                        .build())
+        return sessions.stream()
+                .map(room -> new GetPublicRoomResult(
+                        room.getId().value(),
+                        room.getTitle().value(),
+                        room.getPlayerCount(),
+                        room.getCapacity(),
+                        room.isPrivate()
+                ))
                 .collect(Collectors.toList());
-
-
-        return summaries;
     }
 }
