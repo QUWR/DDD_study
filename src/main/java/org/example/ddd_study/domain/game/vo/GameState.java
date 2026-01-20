@@ -1,6 +1,8 @@
 package org.example.ddd_study.domain.game.vo;
 
-import com.a407.sniffythedog.domain.game.enums.Phase;
+
+
+import org.example.ddd_study.domain.game.enums.Phase;
 
 import java.time.Instant;
 import java.util.Objects;

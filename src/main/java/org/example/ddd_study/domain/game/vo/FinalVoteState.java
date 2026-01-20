@@ -1,7 +1,9 @@
 package org.example.ddd_study.domain.game.vo;
 
-import com.a407.sniffythedog.domain.game.enums.FinalVoteResult;
-import com.a407.sniffythedog.domain.game.enums.YesNo;
+
+
+import org.example.ddd_study.domain.game.enums.FinalVoteResult;
+import org.example.ddd_study.domain.game.enums.YesNo;
 
 import java.util.HashMap;
 import java.util.Map;

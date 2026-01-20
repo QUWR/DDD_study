@@ -1,7 +1,9 @@
 package org.example.ddd_study.domain.game.entity;
 
-import com.a407.sniffythedog.domain.game.enums.GameRole;
-import com.a407.sniffythedog.domain.game.vo.GameUserId;
+
+
+import org.example.ddd_study.domain.game.enums.GameRole;
+import org.example.ddd_study.domain.game.vo.GameUserId;
 
 import java.time.Instant;
 import java.util.Objects;

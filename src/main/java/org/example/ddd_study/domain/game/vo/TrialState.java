@@ -1,5 +1,7 @@
 package org.example.ddd_study.domain.game.vo;
 
+import org.example.ddd_study.domain.game.enums.YesNo;
+
 public record TrialState(GameUserId accusedUserId, FinalVoteState finalVote) {
 
     public TrialState {
@@ -14,7 +16,7 @@ public record TrialState(GameUserId accusedUserId, FinalVoteState finalVote) {
         return new TrialState(accusedUserId, FinalVoteState.empty());
     }
 
-    public TrialState vote(GameUserId voter, com.a407.sniffythedog.domain.game.enums.YesNo vote) {
+    public TrialState vote(GameUserId voter, YesNo vote) {
         return new TrialState(accusedUserId, finalVote.vote(voter, vote));
     }
 

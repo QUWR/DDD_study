@@ -1,10 +1,12 @@
 package org.example.ddd_study.domain.game.entity;
 
-import com.a407.sniffythedog.domain.game.enums.GameRole;
-import com.a407.sniffythedog.domain.game.enums.Phase;
-import com.a407.sniffythedog.domain.game.enums.RoomStatus;
-import com.a407.sniffythedog.domain.game.exception.GameDomainException;
-import com.a407.sniffythedog.domain.game.vo.*;
+
+import org.example.ddd_study.domain.game.enums.GameRole;
+import org.example.ddd_study.domain.game.enums.Phase;
+import org.example.ddd_study.domain.game.enums.RoomStatus;
+import org.example.ddd_study.domain.game.enums.YesNo;
+import org.example.ddd_study.domain.game.exception.GameDomainException;
+import org.example.ddd_study.domain.game.vo.*;
 
 import java.time.Instant;
 import java.util.*;
@@ -199,7 +201,7 @@ public class RoomSession {
         touch();
     }
 
-    public void castFinalVote(GameUserId voter, com.a407.sniffythedog.domain.game.enums.YesNo vote) {
+    public void castFinalVote(GameUserId voter, YesNo vote) {
         TrialState newTrial = gameState.trial().vote(voter, vote);
         this.gameState = gameState.withTrial(newTrial);
         touch();
