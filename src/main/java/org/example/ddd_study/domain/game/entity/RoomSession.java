@@ -19,7 +19,7 @@ public class RoomSession {
 
     private final RoomId id;
     private RoomTitle title;
-    private boolean isPrivate;
+    private PrivateGame privateGame;
     private int capacity;
     private GameUserId hostUserId;
     private RoomStatus status;
@@ -31,13 +31,13 @@ public class RoomSession {
     private final Map<GameUserId, PlayerState> players;
     private GameState gameState;
 
-    private RoomSession(RoomId id, RoomTitle title, boolean isPrivate, int capacity,
+    private RoomSession(RoomId id, RoomTitle title, PrivateGame privateGame, int capacity,
                         GameUserId hostUserId, RoomStatus status, long version,
                         Instant createdAt, Instant updatedAt, Instant startedAt, Instant endedAt,
                         Map<GameUserId, PlayerState> players, GameState gameState) {
         this.id = id;
         this.title = Objects.requireNonNull(title);
-        this.isPrivate = isPrivate;
+        this.privateGame = privateGame;
         this.capacity = validateCapacity(capacity);
         this.hostUserId = Objects.requireNonNull(hostUserId);
         this.status = Objects.requireNonNull(status);
@@ -57,15 +57,19 @@ public class RoomSession {
         PlayerState host = PlayerState.createNew(hostUserId, hostDisplayName, true);
         players.put(hostUserId, host);
 
-        return new RoomSession(id, title, isPrivate, capacity, hostUserId, RoomStatus.WAITING,
+        PrivateGame gameSetting = isPrivate ? PrivateGame.closed() : PrivateGame.open();
+
+        return new RoomSession(id, title, gameSetting, capacity, hostUserId, RoomStatus.WAITING,
                 0, now, now, null, null, players, GameState.initial());
     }
 
-    public static RoomSession reconstitute(RoomId id, RoomTitle title, boolean isPrivate, int capacity,
-                                           GameUserId hostUserId, RoomStatus status, long version,
+    public static RoomSession reconstitute(RoomId id, RoomTitle title, boolean isPrivate, String inviteCode,
+                                           int capacity, GameUserId hostUserId, RoomStatus status, long version,
                                            Instant createdAt, Instant updatedAt, Instant startedAt, Instant endedAt,
                                            Map<GameUserId, PlayerState> players, GameState gameState) {
-        return new RoomSession(id, title, isPrivate, capacity, hostUserId, status, version,
+        PrivateGame gameSetting = PrivateGame.of(isPrivate, inviteCode);
+
+        return new RoomSession(id, title, gameSetting, capacity, hostUserId, status, version,
                 createdAt, updatedAt, startedAt, endedAt, players, gameState);
     }
 
@@ -278,8 +282,10 @@ public class RoomSession {
     }
 
     public boolean isPrivate() {
-        return isPrivate;
+        return privateGame.isPrivate();
     }
+
+    public String getInviteCode() {return privateGame.inviteCode();}
 
     public int getCapacity() {
         return capacity;

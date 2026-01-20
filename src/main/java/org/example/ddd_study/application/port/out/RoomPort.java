@@ -5,6 +5,8 @@ import org.example.ddd_study.domain.game.vo.RoomId;
 
 import java.util.Optional;
 
-public interface LoadRoomPort {
+public interface RoomPort {
+
     Optional<RoomSession> loadRoom(RoomId roomId);
+    void saveRoom(RoomSession roomSession);
 }
