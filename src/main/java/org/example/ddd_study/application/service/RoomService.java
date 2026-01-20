@@ -3,11 +3,11 @@ package org.example.ddd_study.application.service;
 import lombok.RequiredArgsConstructor;
 import org.example.ddd_study.adapter.in.dto.CreateRoomRequest;
 import org.example.ddd_study.adapter.in.dto.CreateRoomResponse;
-import org.example.ddd_study.adapter.in.dto.RoomResponse;
+import org.example.ddd_study.adapter.in.dto.GetAllRoomResponse;
 import org.example.ddd_study.application.exception.ApplicationException;
 import org.example.ddd_study.application.exception.ExceptionType;
 import org.example.ddd_study.application.port.in.CreateRoomUseCase;
-import org.example.ddd_study.application.port.in.GetRoomInfoUseCase;
+import org.example.ddd_study.application.port.in.GetAllRoomsUseCase;
 import org.example.ddd_study.application.port.out.RoomPort;
 import org.example.ddd_study.domain.game.entity.RoomSession;
 import org.example.ddd_study.domain.game.vo.GameUserId;
@@ -16,18 +16,20 @@ import org.example.ddd_study.domain.game.vo.RoomTitle;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class RoomService implements CreateRoomUseCase, GetRoomInfoUseCase {
+public class RoomService implements CreateRoomUseCase, GetAllRoomsUseCase {
 
     private final RoomPort roomPort;
 
     @Override
     @Transactional
     public CreateRoomResponse createRoom(CreateRoomRequest request) {
-        RoomId roomId = RoomId.of(UUID.randomUUID().toString());//todo: 추후 opnvidu 사용시 세션ID로 변경
+        RoomId roomId = RoomId.of(UUID.randomUUID().toString());//todo: 추후 openvidu 사용시 세션ID로 변경
         RoomTitle roomTitle = RoomTitle.of(request.getTitle());
         GameUserId hostUserId = GameUserId.of(request.getHostUserId());
 
@@ -42,15 +44,26 @@ public class RoomService implements CreateRoomUseCase, GetRoomInfoUseCase {
 
         roomPort.saveRoom(roomSession);
 
-        return new CreateRoomResponse(roomId.value());
+        return new CreateRoomResponse(roomId.value(), roomSession.getInviteCode());
     }
 
     @Override
     @Transactional(readOnly = true)
-    public RoomResponse getRoomInfo(RoomId roomId) {
-        RoomSession roomSession = roomPort.loadRoom(roomId)
-                .orElseThrow(() -> ApplicationException.of(ExceptionType.ROOM_NOT_FOUND));
+    public List<GetAllRoomResponse> getAllRooms() {
 
-        return RoomResponse.from(roomSession);
+        List<RoomSession> sessions = roomPort.loadAllRooms();
+
+        List<GetAllRoomResponse> summaries = sessions.stream()
+                .map(room -> GetAllRoomResponse.builder()
+                        .roomId(room.getId().value())
+                        .title(room.getTitle().value())
+                        .currentCount(room.getPlayerCount())
+                        .capacity(room.getCapacity())
+                        .isPrivate(room.isPrivate())
+                        .build())
+                .collect(Collectors.toList());
+
+
+        return summaries;
     }
 }

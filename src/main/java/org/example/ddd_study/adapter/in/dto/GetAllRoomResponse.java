@@ -1,16 +1,17 @@
 package org.example.ddd_study.adapter.in.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
+@Builder
 @AllArgsConstructor
-public class CreateRoomRequest {
+public class GetAllRoomResponse {
+    private String roomId;
     private String title;
+    private int currentCount;
     private int capacity;
     private boolean isPrivate;
-    private Long hostUserId;
-    private String hostDisplayName;
+
 }

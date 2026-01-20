@@ -1,8 +1,9 @@
 package org.example.ddd_study.adapter.in.common.exception;
 
-import com.a407.sniffythedog.adapter.in.http.common.response.ApiResponse;
-import com.a407.sniffythedog.application.exception.ApplicationException;
-import com.a407.sniffythedog.application.exception.ExceptionType;
+
+import org.example.ddd_study.adapter.in.common.response.ApiResponse;
+import org.example.ddd_study.application.exception.ApplicationException;
+import org.example.ddd_study.application.exception.ExceptionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
