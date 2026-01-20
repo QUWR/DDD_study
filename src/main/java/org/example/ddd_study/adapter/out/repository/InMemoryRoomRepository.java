@@ -28,7 +28,7 @@ public class InMemoryRoomRepository implements RoomPort {
     }
 
     @Override
-    public List<RoomSession> loadAllRooms() {
+    public List<RoomSession> loadPublicRooms() {
         return store.values().stream()
                 .filter(room -> !room.isPrivate())
                 .collect(Collectors.toList());

@@ -10,5 +10,5 @@ public interface RoomPort {
 
     Optional<RoomSession> loadRoom(RoomId roomId);
     void saveRoom(RoomSession roomSession);
-    List<RoomSession> loadAllRooms();
+    List<RoomSession> loadPublicRooms();
 }

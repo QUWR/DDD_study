@@ -3,9 +3,7 @@ package org.example.ddd_study.application.service;
 import lombok.RequiredArgsConstructor;
 import org.example.ddd_study.adapter.in.dto.CreateRoomRequest;
 import org.example.ddd_study.adapter.in.dto.CreateRoomResponse;
-import org.example.ddd_study.adapter.in.dto.GetAllRoomResponse;
-import org.example.ddd_study.application.exception.ApplicationException;
-import org.example.ddd_study.application.exception.ExceptionType;
+import org.example.ddd_study.adapter.in.dto.RoomSummaryResponse;
 import org.example.ddd_study.application.port.in.CreateRoomUseCase;
 import org.example.ddd_study.application.port.in.GetAllRoomsUseCase;
 import org.example.ddd_study.application.port.out.RoomPort;
@@ -49,12 +47,12 @@ public class RoomService implements CreateRoomUseCase, GetAllRoomsUseCase {
 
     @Override
     @Transactional(readOnly = true)
-    public List<GetAllRoomResponse> getAllRooms() {
+    public List<RoomSummaryResponse> getAllRooms() {
 
-        List<RoomSession> sessions = roomPort.loadAllRooms();
+        List<RoomSession> sessions = roomPort.loadPublicRooms();
 
-        List<GetAllRoomResponse> summaries = sessions.stream()
-                .map(room -> GetAllRoomResponse.builder()
+        List<RoomSummaryResponse> summaries = sessions.stream()
+                .map(room -> RoomSummaryResponse.builder()
                         .roomId(room.getId().value())
                         .title(room.getTitle().value())
                         .currentCount(room.getPlayerCount())

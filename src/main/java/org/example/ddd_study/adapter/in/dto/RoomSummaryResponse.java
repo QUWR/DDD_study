@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor
-public class GetAllRoomResponse {
+public class RoomSummaryResponse {
     private String roomId;
     private String title;
     private int currentCount;
